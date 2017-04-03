@@ -3,12 +3,27 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Application {
-
+	
+	public static int[][] matrizOriginal;
+	public static int[][] matrizAltered1;
+	public static int[][] matrizAltered2;
+	
 	public static void main(String[] args) {
 		showAllExamples();
 	}
 	
 	public static void readTextFile(String fileName) {
+		matrizOriginal = createMatriz(fileName);
+		printMatriz(matrizOriginal, "Matriz Original");
+		
+		matrizAltered1 = alterMatriz(createMatriz(fileName), 1, 2);
+		printMatriz(matrizAltered1, "Altera 1 pra 2");
+		
+		matrizAltered2 = alterMatriz(createMatriz(fileName), 0, 2);
+		printMatriz(matrizAltered2, "Altera 0 pra 2");
+	}
+	
+	static int[][] createMatriz(String fileName) {
 		try {
 		      FileReader file = new FileReader(fileName);
 		      BufferedReader readFile = new BufferedReader(file);
@@ -21,31 +36,24 @@ public class Application {
 		      int[][] matriz = new int[rows][columns];
 		      
 	          // Lê os dados da matriz
-		      for (int j=0; j< rows; j++) {
+		      for (int j=0; j<rows; j++) {
 		    	  char[] currentLine = readFile.readLine().toCharArray();
 		    	  for (int i=0; i<columns; i++) {
 		    		  matriz[j][i] = Integer.parseInt(String.valueOf(currentLine[i]));
 		    	  }
 		      }
-	            
-	         // Imprime a matrizes: original e alteradas
-		      printOriginalMatriz(matriz);
-		      printAlteredMatriz(matriz, 1, 2, "1 para 2:");
-		      printAlteredMatriz(matriz, 0, 2, "0 para 2:");
-		      
-		      System.out.println();
-		      
 		      file.close();
-		      
+		      return matriz;     
 		} catch (IOException e) {
 			System.err.print("Erro ao ler o arquivo: "+e.getMessage()+".\n");
+			return new int[0][0];
 		}
 	}
 	
-	static void printOriginalMatriz(int[][] matriz) {
+	static void printMatriz(int[][] matriz, String title) {
 		
-		System.out.println("Matriz Original: \n");
-        for (int a=0; a< matriz.length; a++) {
+		System.out.println(title+"\n");
+        for (int a=0; a<matriz.length; a++) {
             for (int b=0; b<matriz[0].length; b++) {
                 if (b == matriz[0].length - 1) {
                     System.out.println(matriz[a][b] + "|");
@@ -58,25 +66,18 @@ public class Application {
         System.out.println();
     }
 
-    static void printAlteredMatriz(int[][] matriz, int currentValue, int newValue, String title) {
-    	
-    	System.out.println(title+"\n");
-    	
-        for (int a=0; a< matriz.length; a++) {
+    static int[][] alterMatriz(int[][] matriz, int currentValue, int newValue) {
+     	
+        for (int a=0; a<matriz.length; a++) {
             for (int b=0; b<matriz[0].length;b++) {
                 int valor = matriz[a][b];
                 if (valor == currentValue) {
                     valor = newValue;
                 }
-                if (b == matriz[0].length - 1) {
-                    System.out.println(valor + "|");
-                } else {
-                    System.out.print("|" + valor + "|");
-                }
+                matriz[a][b] = valor;
             }
         }
-        System.out.println();
-        System.out.println();
+        return matriz;
     }
     
     static void showAllExamples() {
